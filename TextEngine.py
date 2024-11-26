@@ -10,7 +10,7 @@ class TextEngine:
         self.clm_idx = 0
         self.pause_timer = 0
         self.typing_timer = 0
-        self.completed = False  # Track if the text is fully displayed
+        self.completed = False
 
         self.font_size = font_size
         self.text_speed = text_speed
@@ -18,7 +18,6 @@ class TextEngine:
         self.stop_pause = stop_pause
         self.fps = fps
 
-        # Font setup
         self.font = font or pygame.font.SysFont("monospace ", font_size)
 
     def is_punctuation(self, character):
@@ -46,11 +45,8 @@ class TextEngine:
             self.pause_timer -= 1
         else:
             self.typing_timer += 1
-            # Skip functionality
+
             if keys[skip_key] and self.row_idx < len(self.texts):
-                # self.char += self.texts[self.row_idx][self.clm_idx:] + "\n"
-                # self.row_idx += 1
-                # self.clm_idx = 0
                 self.set_pause(self.line_pause if self.row_idx < len(self.texts) else 0)
             elif self.typing_timer >= self.fps // self.text_speed:
                 self.typing_timer = 0
@@ -60,11 +56,9 @@ class TextEngine:
                     self.clm_idx += 1
                     wait = True
 
-                    # Pause on punctuation
                     if self.is_punctuation(current_char):
                         self.set_pause(self.stop_pause)
 
-                    # Move to the next line
                     if self.clm_idx >= len(self.texts[self.row_idx]):
                         while wait:
                             for event in pygame.event.get():
@@ -76,7 +70,7 @@ class TextEngine:
                         self.set_pause(self.line_pause)
 
         if self.row_idx >= len(self.texts):
-            self.completed = True  # Mark text as completed
+            self.completed = True
 
     def render(self, surface:pygame.Surface, position, text_color=(255, 255, 255)):
         """Render the current text on the given surface with word wrap."""
